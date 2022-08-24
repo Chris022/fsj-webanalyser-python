@@ -23,7 +23,7 @@ def results_controller(url):
         return {"type":"ERROR","data":"not_analysed","message":"You have to analyse a url before you can see the Results"}
     #start by checking if the analyser process is finished
     if(check_if_running(database,url)):
-        return {"type":"ERROR","data":"still_analysing","message":"Still analysing..."}
+        return {"type":"ERROR","data":"still_analysing","message":"Still analysing...This might take multiple hours!Be patient!"}
 
     #return the data the analyser produced
     return {"type":"SUCCESS","data":get_data(database,url)}
