@@ -1,13 +1,16 @@
 from bottle import get, run, post, request, response
+from concurrency_controller import add_new_Variables, spawn_new_Process, check_if_running, get_data
+
 
 database = dict()
 
 def analyse_controller(url):
     global database
     #create new variables and add them to the database dict
-
+    add_new_Variables(database,url)
 
     #spawn new analyser process
+    spawn_new_Process(database,url)
 
     #return the url as a key to find the results
     return {"type":"SUCCESS","data":url}
@@ -15,11 +18,11 @@ def analyse_controller(url):
 def results_controller(url):
     global database
     #start by checking if the analyser process is finished
-    if(False):
+    if(check_if_running(database,url)):
         return {"type":"ERROR","data":"Still analysing..."}
 
     #return the data the analyser produced
-    return {"type":"SUCCESS","data":{"test":"test"}}
+    return {"type":"SUCCESS","data":get_data(database,url)}
 
 @get('/')
 def index():
