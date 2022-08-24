@@ -18,9 +18,12 @@ def analyse_controller(url):
 
 def results_controller(url):
     global database
+    #start by checking if the url was already analysed
+    if(not url in database.keys()):
+        return {"type":"ERROR","data":"not_analysed","message":"You have to analyse a url before you can see the Results"}
     #start by checking if the analyser process is finished
     if(check_if_running(database,url)):
-        return {"type":"ERROR","data":"Still analysing..."}
+        return {"type":"ERROR","data":"still_analysing","message":"Still analysing..."}
 
     #return the data the analyser produced
     return {"type":"SUCCESS","data":get_data(database,url)}
@@ -36,7 +39,7 @@ def analyse():
     #validate input
     input_data = request.json
     if(not "url" in input_data.keys()):
-        return {"type":"ERROR","data":"Invalid input data: {url:<value>} is required"}
+        return {"type":"ERROR","data":"invalid_input","message":"Invalid input data: {url:<value>} is required"}
     #handle request
     return analyse_controller(input_data["url"])
 
@@ -47,7 +50,7 @@ def results():
     #validate input
     input_data = request.json
     if(not "url" in input_data.keys()):
-        return {"type":"ERROR","data":"Invalid input data: {url:<value>} is required"}
+        return {"type":"ERROR","data":"invalid_input","message":"Invalid input data: {url:<value>} is required"}
     #handle request
     return results_controller(input_data["url"])
 
