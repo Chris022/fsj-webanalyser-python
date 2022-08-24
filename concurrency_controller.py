@@ -2,29 +2,32 @@ from multiprocessing import Process, Array, Value, Manager
 from ctypes import c_bool
 import time
 
-#This is a Test function simulating the real Analyser
-def check_website(finished,data):
+def analyse_website(finished,data,analyse_function):
     finished.value = False
 
-    #simulate the time it takes for the script to run
-    time.sleep(100)
+    #analyse the url
+    list_of_visited_urls,analyse_results = analyse_function()
 
     finished.value = True
-    data["abc.at"] = ["test"]
+    data["list_of_visited_urls"] = list_of_visited_urls
+    data["analyse_results"] = analyse_results
 
 
 
 #create a Manager for handeling the communication beteen the Processes and the Server
 manager = Manager()
 
-def add_new_Variables(database_dict,url):
+def add_new_variables(database_dict,url):
     database_dict[url] = {"finished":manager.Value(c_bool,False),"data":manager.dict()}
 
 
-def spawn_new_Process(database_dict,url):
+def spawn_new_process(database_dict,url,analyse_function):
+    #prep variables
     finished = database_dict[url]["finished"]
     data = database_dict[url]["data"]
-    p1 = Process(target=check_website, args=(finished,data,))
+    #prep analyse function
+    analyse_function_preped = lambda: analyse_function(url)
+    p1 = Process(target=analyse_website, args=(finished,data,analyse_function_preped,))
     p1.start()
 
 def check_if_running(database_dict,url):

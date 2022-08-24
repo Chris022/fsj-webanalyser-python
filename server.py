@@ -1,5 +1,6 @@
 from bottle import get, run, post, request, response
-from concurrency_controller import add_new_Variables, spawn_new_Process, check_if_running, get_data
+from concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data
+from analyse_controller import analyse_url
 
 
 database = dict()
@@ -7,10 +8,10 @@ database = dict()
 def analyse_controller(url):
     global database
     #create new variables and add them to the database dict
-    add_new_Variables(database,url)
+    add_new_variables(database,url)
 
     #spawn new analyser process
-    spawn_new_Process(database,url)
+    spawn_new_process(database,url,analyse_url)
 
     #return the url as a key to find the results
     return {"type":"SUCCESS","data":url}
