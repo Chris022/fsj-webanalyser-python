@@ -1,5 +1,5 @@
-#from selenium_connector import SeleniumConnector
-from ghost_py_connector import GhostPyConnector
+from selenium_connector import SeleniumConnector
+#from ghost_py_connector import GhostPyConnector
 import time
 import re
 
@@ -7,7 +7,7 @@ def check_thrid_party_requets(driver,domain_url):
     thrid_party_calls = []
     for request_url in driver.getThirdPartyRequets():
         #check if url is from a thrid party
-        if(not re.match("^http(s)?://"+"(www\.)?"+domain_url,request_url)):
+        if(not re.match("^http(s)?://"+"(.+\.)?"+domain_url,request_url)):
             #remove slash and just use adress
             request_url = request_url.replace("https://","")
             request_url = request_url.replace("http://","")
@@ -23,17 +23,17 @@ def check_cookies(driver):
 
 def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,number_of_visited_pages,url):
 
-    #check if number of visited pages is bigger than 40
-    if(number_of_visited_pages.value > 40):
-        return
-
     #check if url was already visited
     if(url in list_of_visited_urls):
         return
 
+    #check if number of visited pages is bigger than 20
+    if(number_of_visited_pages.value > 20):
+        return
+
     #get page content
-    #print("Visiting: "+"https://www."+domain_url+"/"+url)
-    driver.open("https://www."+domain_url+"/"+url)
+    #print("Visiting: "+"https://+domain_url+"/"+url)
+    driver.open("https://"+domain_url+"/"+url)
 
     #increase the counter for the number of visited pages
     number_of_visited_pages.value += 1;
@@ -49,7 +49,7 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,number_of_vis
     thrid_party_calls = check_thrid_party_requets(driver,domain_url)
     cookies = check_cookies(driver)
     if(len(cookies) > 0 or len(thrid_party_calls) > 0):
-        result_dict["https://www."+domain_url+"/"+url] = {"third-party-requests":thrid_party_calls,"cookies":cookies}
+        result_dict["https://"+domain_url+"/"+url] = {"third-party-requests":thrid_party_calls,"cookies":cookies}
 
     #add url to list of visited urls so that it is not visited twice
     list_of_visited_urls.append(url)
@@ -64,12 +64,10 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,number_of_vis
     own_domain_links = []
     for link in all_links_on_webpage:
         src_url = link[1]
-        if(re.match("^http(s)?://"+"(www\.)?"+domain_url,src_url) or not re.match("^http(s)?://",src_url)):
+        if(re.match("^http(s)?://"+"(.+\.)?"+domain_url,src_url) or not re.match("^http(s)?://",src_url)):
             #remove domain and protocol from url
-            src_url = src_url.replace("https://","")
-            src_url = src_url.replace("http://","")
-            src_url = src_url.replace("www.","")
-            src_url = src_url.replace(domain_url,"")
+            src_url = re.sub("http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)","",src_url)
+
             if(src_url.find(".") != -1 or src_url.find(":") != -1):
                 continue
             #remove whitespace
@@ -109,8 +107,8 @@ def analyse_url(url):
         result_dict = {}
 
         #init the driver
-        #driver = SeleniumConnector()
-        driver = GhostPyConnector()
+        driver = SeleniumConnector()
+        #driver = GhostPyConnector()
 
         #crawl url and sub-urls and analyse them
         crawl_links(result_dict,driver,url,list_of_visited_urls,number_of_visited_pages,'')
