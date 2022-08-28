@@ -28,8 +28,7 @@ def spawn_new_process(database_dict,url,analyse_function):
     number_of_visited_pages = database_dict[url]["number_of_visited_pages"]
     data = database_dict[url]["data"]
     #prep analyse function
-    analyse_function_preped = analyse_function(url)
-    p1 = Process(target=analyse_website, args=(finished,number_of_visited_pages,data,analyse_function_preped,))
+    p1 = Process(target=analyse_website, args=(finished,number_of_visited_pages,data,analyse_function,))
     p1.start()
 
 def check_if_running(database_dict,url):

@@ -11,7 +11,7 @@ def analyse_controller(url):
     add_new_variables(database,url)
 
     #spawn new analyser process
-    spawn_new_process(database,url,analyse_url)
+    spawn_new_process(database,url,analyse_url(url,))
 
     #return the url as a key to find the results
     return {"type":"SUCCESS","data":url}
