@@ -1,5 +1,5 @@
-from selenium_connector import SeleniumConnector
-#from ghost_py_connector import GhostPyConnector
+#from selenium_connector import SeleniumConnector
+from ghost_py_connector import GhostPyConnector
 import time
 import re
 
