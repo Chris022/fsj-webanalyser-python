@@ -1,26 +1,24 @@
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.options import Options
+#from selenium_connector import SeleniumConnector
+from ghost_py_connector import GhostPyConnector
 import time
 import re
 
 def check_thrid_party_requets(driver,domain_url):
     thrid_party_calls = []
-    for request in driver.requests:
-        if request.response:
-            #check if url is from a thrid party
-            request_url = request.url
-            if(not re.match("^http(s)?://"+"(www\.)?"+domain_url,request_url)):
-                #remove slash and just use adress
-                request_url = request_url.replace("https://","")
-                request_url = request_url.replace("http://","")
-                request_url = request_url.split("/")[0]
-                thrid_party_calls.append(request_url)
-    del driver.requests
+    for request_url in driver.getThirdPartyRequets():
+        #check if url is from a thrid party
+        if(not re.match("^http(s)?://"+"(www\.)?"+domain_url,request_url)):
+            #remove slash and just use adress
+            request_url = request_url.replace("https://","")
+            request_url = request_url.replace("http://","")
+            request_url = request_url.split("/")[0]
+            thrid_party_calls.append(request_url)
+    driver.clearRequets()
     #remove list without doubles
     return list(dict.fromkeys(thrid_party_calls))
 
 def check_cookies(driver):
-    cookies = driver.get_cookies()
+    cookies = driver.getCookies()
     return cookies
 
 def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
@@ -31,7 +29,7 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
 
     #get page content
     #print("Visiting: "+"https://www."+domain_url+"/"+url)
-    driver.get("https://www."+domain_url+"/"+url)
+    driver.open("https://www."+domain_url+"/"+url)
 
 
     #do checks on webpage
@@ -48,7 +46,7 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
 
     #add url to list of visited urls so that it is not visited twice
     list_of_visited_urls.append(url)
-    html = driver.page_source
+    html = driver.getHtml()
 
     #get all urls in href and src elements
     pattern = '((?:href|src)=")([^"]+)(")'
@@ -95,18 +93,6 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
 
     return
 
-def  init_driver():
-    chrome_options = Options()
-    #start chrome in headless mode
-    chrome_options.add_argument("--headless")
-
-    #throw all downloads away
-    chrome_options.add_experimental_option("prefs",{"download.default_directory": "/dev/null"})
-
-    # Create a new instance of the Chrome driver
-    driver = webdriver.Chrome('./chromedriver',options=chrome_options)
-    return driver
-
 def analyse_url(url):
 
     #create variables for data collection
@@ -114,12 +100,12 @@ def analyse_url(url):
     result_dict = {}
 
     #init the driver
-    driver = init_driver()
+    driver = GhostPyConnector()
 
     #crawl url and sub-urls and analyse them
     crawl_links(result_dict,driver,url,list_of_visited_urls,'')
 
     #close the driver
-    driver.quit()
+    driver.close()
 
     return list_of_visited_urls,result_dict
