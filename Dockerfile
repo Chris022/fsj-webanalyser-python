@@ -1,13 +1,21 @@
-FROM debian:bullseye
+FROM ubuntu:xenial
 
-RUN apt update
-RUN apt install chromium=104.0.5112.101-1~deb11u1 -y
-RUN apt-mark hold chromium
-RUN apt install python3-pip -y
+ENV PYTHONUNBUFFERED 1
+RUN apt-get update
+RUN apt-get install python3-pip xvfb git software-properties-common -y
+RUN apt-get install software-properties-common -y &&\
+    add-apt-repository ppa:thopiekar/pyside-git -y &&\
+    apt-get remove software-properties-common -y
+RUN apt-get update
+RUN apt-get install python3-pyside2 -y
+RUN apt-get clean
+RUN pip3 install xvfbwrapper
+RUN pip3 install ghost.py --pre
+
 
 COPY . /src/fsj_webanalyser/
 WORKDIR /src/fsj_webanalyser/
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 CMD ["python3","./server.py"]
