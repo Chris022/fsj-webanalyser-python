@@ -1,0 +1,42 @@
+<html>
+    <div style="display: flex;flex-direction: row;justify-content: center;width: 100%">
+        <div style="display: flex;flex-direction: column;justify-content: center;height: 100%">
+            <h1> Welcome to FSJ-Webanalyser </h1>
+            <div>
+                <label for="url">
+                    Plase enter the url you want to check without the Protokoll!
+                </label>
+                <br>
+                <br>
+                <br>
+                <div style="display: flex;flex-direction: row;justify-content: center;width: 100%">
+                    <input id="url_input" type="text" name="url" placeholder="URL"></input>
+                </div>
+                <br>
+                <div style="display: flex;flex-direction: row;justify-content: center;width: 100%">
+                    <button onclick="checkNow()">Start Check</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>
+
+<script>
+    function checkNow(){
+        let url = document.getElementById("url_input").value
+
+        //validate
+
+
+        //make backend call
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/analyse");
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.send(JSON.stringify({"url":url})); 
+        xhttp.onreadystatechange = () => {
+            //change url
+            window.location = "/result/"+url;
+        }
+
+    }
+</script>

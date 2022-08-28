@@ -1,6 +1,7 @@
 from bottle import get, run, post, request, response
 from concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data,check_visited_pages
 from analyse_controller import analyse_url
+from view_controller import view_main,view_results
 
 
 database = dict()
@@ -24,14 +25,21 @@ def results_controller(url):
     #start by checking if the analyser process is finished
     if(check_if_running(database,url)):
         visited_pages = check_visited_pages(database,url)
-        return {"type":"ERROR","data":"still_analysing","data":{"visited_pages":visited_pages},"message":"Still analysing...This might take multiple hours!Be patient!"}
+        #return view_results_not_finished(visited_pages)
+        return {"type":"ERROR","data":"still_analysing","info_data":{"visited_pages":visited_pages},"message":"Still analysing...This might take multiple hours!Be patient!"}
 
     #return the data the analyser produced
     return {"type":"SUCCESS","data":get_data(database,url)}
 
 @get('/')
 def index():
-    return "This is the API for the fjs-webanalyser"
+    return view_main()
+
+@get('/result/<url>')
+def index(url=None):
+    if(not url):
+        return "No url given"
+    return view_results(url)
 
 @post('/analyse')
 def analyse():
