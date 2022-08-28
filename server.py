@@ -1,5 +1,5 @@
 from bottle import get, run, post, request, response
-from concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data
+from concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data,check_visited_pages
 from analyse_controller import analyse_url
 
 
@@ -23,7 +23,8 @@ def results_controller(url):
         return {"type":"ERROR","data":"not_analysed","message":"You have to analyse a url before you can see the Results"}
     #start by checking if the analyser process is finished
     if(check_if_running(database,url)):
-        return {"type":"ERROR","data":"still_analysing","message":"Still analysing...This might take multiple hours!Be patient!"}
+        visited_pages = check_visited_pages(database,url)
+        return {"type":"ERROR","data":"still_analysing","data":{"visited_pages":visited_pages},"message":"Still analysing...This might take multiple hours!Be patient!"}
 
     #return the data the analyser produced
     return {"type":"SUCCESS","data":get_data(database,url)}

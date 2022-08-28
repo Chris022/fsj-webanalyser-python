@@ -1,5 +1,5 @@
-#from selenium_connector import SeleniumConnector
-from ghost_py_connector import GhostPyConnector
+from selenium_connector import SeleniumConnector
+#from ghost_py_connector import GhostPyConnector
 import time
 import re
 
@@ -21,7 +21,11 @@ def check_cookies(driver):
     cookies = driver.getCookies()
     return cookies
 
-def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
+def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,number_of_visited_pages,url):
+
+    #check if number of visited pages is bigger than 40
+    if(number_of_visited_pages.value > 40):
+        return
 
     #check if url was already visited
     if(url in list_of_visited_urls):
@@ -30,6 +34,9 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
     #get page content
     #print("Visiting: "+"https://www."+domain_url+"/"+url)
     driver.open("https://www."+domain_url+"/"+url)
+
+    #increase the counter for the number of visited pages
+    number_of_visited_pages.value += 1;
 
 
     #do checks on webpage
@@ -89,23 +96,28 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,url):
             own_domain_links.append(src_url)
     
     for own_domain_link in own_domain_links:
-        crawl_links(result_dict,driver,domain_url,list_of_visited_urls,own_domain_link)
+        crawl_links(result_dict,driver,domain_url,list_of_visited_urls,number_of_visited_pages,own_domain_link)
 
     return
 
 def analyse_url(url):
 
-    #create variables for data collection
-    list_of_visited_urls = []
-    result_dict = {}
+    def analyse_url_inner(number_of_visited_pages):
 
-    #init the driver
-    driver = GhostPyConnector()
+        #create variables for data collection
+        list_of_visited_urls = []
+        result_dict = {}
 
-    #crawl url and sub-urls and analyse them
-    crawl_links(result_dict,driver,url,list_of_visited_urls,'')
+        #init the driver
+        driver = SeleniumConnector()
+        #driver = GhostPyConnector()
 
-    #close the driver
-    driver.close()
+        #crawl url and sub-urls and analyse them
+        crawl_links(result_dict,driver,url,list_of_visited_urls,number_of_visited_pages,'')
 
-    return list_of_visited_urls,result_dict
+        #close the driver
+        driver.close()
+
+        return list_of_visited_urls,result_dict
+
+    return lambda number_of_visited_pages: analyse_url_inner(number_of_visited_pages)
