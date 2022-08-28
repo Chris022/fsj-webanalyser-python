@@ -109,8 +109,8 @@ def analyse_url(url):
         result_dict = {}
 
         #init the driver
-        driver = SeleniumConnector()
-        #driver = GhostPyConnector()
+        #driver = SeleniumConnector()
+        driver = GhostPyConnector()
 
         #crawl url and sub-urls and analyse them
         crawl_links(result_dict,driver,url,list_of_visited_urls,number_of_visited_pages,'')
