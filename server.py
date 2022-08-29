@@ -1,4 +1,4 @@
-from bottle import get, run, post, request, response
+from bottle import get, run, post, request, response, static_file, route
 from concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data,check_visited_pages
 from analyse_controller import analyse_url
 from view_controller import view_main,view_results
@@ -33,13 +33,11 @@ def results_controller(url):
 
 @get('/')
 def index():
-    return view_main()
+    return static_file("index.html", root='html')
 
-@get('/result/<url>')
-def index(url=None):
-    if(not url):
-        return "No url given"
-    return view_results(url)
+@route('/<filename>')
+def send_static(filename):
+    return static_file(filename, root='html')
 
 @post('/analyse')
 def analyse():
