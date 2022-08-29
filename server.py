@@ -39,6 +39,10 @@ def index():
 def send_static(filename):
     return static_file(filename, root='public')
 
+@route('/js/<filename>')
+def send_static(filename):
+    return static_file(filename, root='public/js')
+
 @post('/analyse')
 def analyse():
     #return json
