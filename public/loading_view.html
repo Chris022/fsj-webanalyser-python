@@ -1,0 +1,20 @@
+<html>
+
+<head>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="/loading_view.js"></script>
+    <link rel="stylesheet" href="/loading_view.css" />
+</head>
+
+<body>
+    <div class="main center-vertical" x-init="loading_view_init()">
+        <div class="center-horizontal">
+            <div class="card">
+                <img src="/loading_spinner.svg"/>
+                <p>Still analysing...</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

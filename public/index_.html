@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="/js/alpine_components.js"></script>
+</head>
+
+<body x-data="form_data">
+    <div style="display: flex;flex-direction: row;justify-content: center;width: 100%">
+        <div style="display: flex;flex-direction: column;justify-content: center;height: 100%">
+            <h1> Welcome to FSJ-Webanalyser </h1>
+            <div>
+                <label for="url">
+                    Plase enter the url you want to check without "http://" or "https://" !
+                </label>
+                <br>
+                <br>
+                <br>
+                <div>
+                    <div style="display: flex;flex-direction: row;justify-content: center;width: 100%">
+                        <input x-model="url" type="text" name="url" placeholder="URL"></input>
+                    </div>
+                    <br>
+                    <div style="display: flex;flex-direction: row;justify-content: center;width: 100%">
+                        <button x-on:click="start_analyse()">Start Check</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
