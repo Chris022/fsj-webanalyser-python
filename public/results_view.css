@@ -22,12 +22,21 @@
     border-radius: 10px;
     text-align: center;
     align-items: center;
+    overflow-x: auto;
 }
 
 .spacer-10 {
     height:10px;
 }
 
+.spacer-20 {
+    height:20px;
+}
+
 .spacer-40 {
     height:40px;
+}
+
+.cookie-table {
+    width: 100%;
 }

@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="/results_view.js"></script>
+    <link rel="stylesheet" href="/results_view.css" />
+</head>
+
+<body x-data="init()">
+    <div class="main center-vertical" >
+        <div class="center-horizontal">
+            <div class="card">
+                <h1> Your results are ready </h1>
+                <div class="spacer-40"></div>
+                <h2> Visited URLS </h2>
+                <table class="cookie-table" x-init="visited_url_data()">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <template x-for="url in visited_urls">
+                        <tbody>
+                            <tr>
+                                <td align="center" style="border-bottom: solid 1px black" x-text="url"></td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </table>
+                <h2> Cookies </h2>
+                <table class="cookie-table" x-init="cookie_data()">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Domain</th>
+                            <th>Show/Hide URLs</th>
+                        </tr>
+                    </thead>
+                    <template x-for="cookie in cookie_list">
+                        <tbody x-data="{url_open:false}">
+                            <tr>
+                                <td align="center" style="border-bottom: solid 1px black" x-text="cookie['name']"></td>
+                                <td align="center" style="border-bottom: solid 1px black" x-text="cookie['domain']"></td>
+                                <td align="center" style="border-bottom: solid 1px black">
+                                    <button @click="url_open=!url_open">X</button>
+                                </td>
+                            </tr>
+                            <tr x-show="url_open">
+                                <td colspan="4" align="left">
+                                    <ul>
+                                        <template x-for="url in cookie_urls[cookie['id']]">
+                                            <li x-text="url"></li>
+                                        </template>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </table>
+                <div class="spacer-20"></div>
+                <h2> Thrid-Party-Requests </h2>
+                <table class="cookie-table" x-init="thrid_party_data()">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Show/Hide URLs</th>
+                        </tr>
+                    </thead>
+                    <template x-for="request in request_list">
+                        <tbody x-data="{url_open:false}">
+                            <tr>
+                                <td align="center" style="border-bottom: solid 1px black" x-text="request['request']"></td>
+                                <td align="center" style="border-bottom: solid 1px black">
+                                    <button @click="url_open=!url_open">X</button>
+                                </td>
+                            </tr>
+                            <tr x-show="url_open">
+                                <td colspan="4" align="left">
+                                    <ul>
+                                        <template x-for="url in request_urls[request['id']]">
+                                            <li x-text="url"></li>
+                                        </template>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
