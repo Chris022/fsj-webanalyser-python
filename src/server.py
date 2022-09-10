@@ -33,15 +33,12 @@ def results_controller(url):
 
 @get('/')
 def index():
-    return static_file("index.html", root='public')
+    return static_file("index.html", root='./public')
 
 @route('/<filename>')
 def send_static(filename):
-    return static_file(filename, root='public')
+    return static_file(filename, root='./public')
 
-@route('/js/<filename>')
-def send_static(filename):
-    return static_file(filename, root='public/js')
 
 @post('/analyse')
 def analyse():
