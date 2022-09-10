@@ -1,4 +1,4 @@
-from connector import Connector
+from src.connector import Connector
 
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options

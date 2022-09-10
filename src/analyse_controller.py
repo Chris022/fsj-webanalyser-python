@@ -1,7 +1,8 @@
-from selenium_connector import SeleniumConnector
-#from ghost_py_connector import GhostPyConnector
 import time
 import re
+
+from src.selenium_connector import SeleniumConnector
+#from src.ghost_py_connector import GhostPyConnector
 
 def check_thrid_party_requets(driver,domain_url):
     thrid_party_calls = []

@@ -1,7 +1,7 @@
 from bottle import get, run, post, request, response, static_file, route
-from concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data,check_visited_pages
-from analyse_controller import analyse_url
-from view_controller import view_main,view_results
+from src.concurrency_controller import add_new_variables, spawn_new_process, check_if_running, get_data,check_visited_pages
+from src.analyse_controller import analyse_url
+from src.view_controller import view_main,view_results
 
 
 database = dict()
