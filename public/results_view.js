@@ -111,4 +111,5 @@ async function get_analyse_results() {
         return response.data;
     }
     alert("Sorry... Something unexpected happend!");
+    window.location="/";
 }
