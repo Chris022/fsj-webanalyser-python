@@ -95,7 +95,9 @@ function init() {
 
 
 async function get_analyse_results() {
-    let url = "google.com"
+    
+    let urlParams = new URLSearchParams(window.location.search);
+    let url = urlParams.get('url')
 
     const response = await fetch("/results", {
         method: 'POST',
