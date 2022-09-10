@@ -14,7 +14,7 @@ class SeleniumConnector(Connector):
         chrome_options.add_experimental_option("prefs",{"download.default_directory": "/dev/null"})
 
         # Create a new instance of the Chrome driver
-        self.driver = webdriver.Chrome('./chromedriver',options=chrome_options)
+        self.driver = webdriver.Chrome('./utils/chromedriver',options=chrome_options)
 
     def open(self,url):
         self.driver.get(url)

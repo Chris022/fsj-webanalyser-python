@@ -1,8 +1,10 @@
 import time
 import re
+import os
 
 from src.selenium_connector import SeleniumConnector
-#from src.ghost_py_connector import GhostPyConnector
+    
+
 
 def check_thrid_party_requets(driver,domain_url):
     thrid_party_calls = []
@@ -33,8 +35,11 @@ def crawl_links(result_dict,driver,domain_url,list_of_visited_urls,number_of_vis
         return
 
     #get page content
-    #print("Visiting: "+"https://+domain_url+"/"+url)
-    driver.open("https://"+domain_url+"/"+url)
+    print("Visiting: "+"https://"+domain_url+"/"+url)
+    try:
+        driver.open("https://"+domain_url+"/"+url)
+    except:
+        return
 
     #increase the counter for the number of visited pages
     number_of_visited_pages.value += 1;
@@ -108,8 +113,8 @@ def analyse_url(url):
         result_dict = {}
 
         #init the driver
-        driver = SeleniumConnector()
-        #driver = GhostPyConnector()
+        driver = SeleniumConnector()   
+                     
 
         #crawl url and sub-urls and analyse them
         crawl_links(result_dict,driver,url,list_of_visited_urls,number_of_visited_pages,'')
